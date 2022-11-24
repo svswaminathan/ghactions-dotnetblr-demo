@@ -25,7 +25,7 @@ jobs:
   deploy-to-dev:
     runs-on: ubuntu-latest
     environment: dev
-    needs: ci
+    needs: build-and-publish
     steps:
     - name: "Deploy to Dev env"
       uses: ./.github/actions/deploy-to-webapp
