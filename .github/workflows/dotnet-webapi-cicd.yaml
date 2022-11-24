@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
     - name: "Build and publish webapi app"
       uses: ./.github/actions/build-dotnet-app
       with:
