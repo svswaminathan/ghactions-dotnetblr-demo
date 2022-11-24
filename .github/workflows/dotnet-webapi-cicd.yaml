@@ -27,6 +27,7 @@ jobs:
     environment: dev
     needs: build-and-publish
     steps:
+    - uses: actions/checkout@v3
     - name: "Deploy to Dev env"
       uses: ./.github/actions/deploy-to-webapp
       with:
@@ -39,6 +40,7 @@ jobs:
     environment: prod
     needs: deploy-to-dev
     steps:
+    - uses: actions/checkout@v3
     - name: "Deploy to Prod env"
       uses: ./.github/actions/deploy-to-webapp
       with:
