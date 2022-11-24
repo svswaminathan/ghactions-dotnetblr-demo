@@ -10,8 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci:
-
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,3 +21,27 @@ jobs:
         dotnet_project_path: "./webapi-demo"
         dotnet_csproj_name: "webapi-demo.csproj"
         artifact_name: "webapi-demo"
+  
+  deploy-to-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: ci
+    steps:
+    - name: "Deploy to Dev env"
+      uses: ./.github/actions/deploy-to-webapp
+      with:
+        artifact_name: "webapi-demo"
+        azure_web_app_name: "app-dotnetblr-demo-dev"
+        publish_profile: '${{secrets.AZURE_WEB_APP_PUBLISH_PROFILE}}'
+
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    environment: prod
+    needs: deploy-to-dev
+    steps:
+    - name: "Deploy to Prod env"
+      uses: ./.github/actions/deploy-to-webapp
+      with:
+        artifact_name: "webapi-demo"
+        azure_web_app_name: "app-dotnetblr-demo-prod"
+        publish_profile: '${{secrets.AZURE_WEB_APP_PUBLISH_PROFILE}}'
