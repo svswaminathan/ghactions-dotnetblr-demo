@@ -1,5 +1,7 @@
-﻿namespace library_demo;
-public class Class1
+﻿namespace library_demo
 {
+    public class Class1
+    {
 
+    }
 }

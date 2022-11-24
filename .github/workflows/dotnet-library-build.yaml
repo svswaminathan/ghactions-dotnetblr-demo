@@ -1,0 +1,35 @@
+name: Build .NET Library
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'library-demo/**' 
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'library-demo/**'
+  workflow_dispatch:
+
+env:
+  LIBRARY_PATH: './library-demo'
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['5.0.x','6.0.x','7.0.x']
+    name: Running .NET Build on version ${{ matrix.dotnet-version }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Restore dependencies
+      run: dotnet restore '${{ env.LIBRARY_PATH }}/library-demo.csproj'
+    - name: Build
+      run: dotnet build --no-restore '${{ env.LIBRARY_PATH }}/library-demo.csproj'
