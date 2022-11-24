@@ -1,0 +1,23 @@
+name: .NET WebApi Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths: ['webapi-demo/**.cs'] 
+  pull_request:
+    branches: [ main ]
+    paths: ['webapi-demo/**.cs']
+  workflow_dispatch:
+
+jobs:
+  ci:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "Build and publish webapi app"
+      uses: .github/actions/build-dotnet-app
+      with:
+        dotnet_project_path: "./webapi-demo"
+        dotnet_csproj_name: "webapi-demo.csproj"
+        artifact_name: "webapi-demo"

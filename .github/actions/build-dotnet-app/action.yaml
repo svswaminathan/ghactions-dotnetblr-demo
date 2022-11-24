@@ -1,0 +1,39 @@
+name: 'Build and publish dotnet app'
+description: "Build and publish dotnet app"
+
+inputs:
+  dotnet_project_path:
+    description: "Specify the dotnet csproj file path"
+    required: true
+  dotnet_csproj_name:
+    description: "Name of the csproj that needs to be build"
+    required: true
+  artifact_name:
+    description: "Name of the artifact to be uploaded"
+    required: true
+  
+runs:
+  using: "composite"
+
+  steps:
+    - uses: actions/checkout@v3
+    - name: "Setup .NET"
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: "Restore dependencies"
+      shell: bash
+      run: dotnet restore '${{ inputs.dotnet_project_path }}/${{ inputs.dotnet_csproj_name }}'
+    - name: Build
+      shell: bash
+      run: dotnet build '${{ inputs.dotnet_project_path }}/${{ inputs.dotnet_csproj_name }}' --no-restore
+    - name: Publish
+      shell: bash
+      run: dotnet publish '${{ inputs.dotnet_project_path }}/${{ inputs.dotnet_csproj_name }}' -o './publish'
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        # Artifact name
+        name: '$ {{ inputs.artifact_name}}'
+        # A file, directory or wildcard pattern that describes what to upload
+        path: '${{ ./publish }}'
